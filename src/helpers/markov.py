@@ -1,2 +1,2 @@
-def build_model():
+def build_model() -> str:
     return "hello world"
