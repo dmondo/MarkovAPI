@@ -1,37 +1,32 @@
 """Flask app and routes."""
+import json
 from typing import Any
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 from src.helpers import markov
 
 app = Flask(__name__)
+CORS(app)
 
 
-@app.route("/model")
+@app.route("/chains", methods=["POST"])
 def get_markov_model() -> Any:
-    """GET route for markov model.
+    """POST route for markov model.
 
     Returns:
         JSON representation of markov model.
     """
-    test_data = ["this is some sample text"]
-    model = markov.build_model(text_data=test_data, order=3)
-    return jsonify(model)
+    params = json.loads(request.get_data())
+    text_data = params.get("text", [""])
+    order = params.get("order", 3)
+    length = params.get("length", 10)
+    num_chains = params.get("num_chains", 1)
 
+    model = markov.build_model(text_data=text_data, order=order)
+    chains = markov.generate_chains(
+        model=model, length=length, order=order, num_chains=num_chains
+    )
 
-@app.route("/chain")
-def get_markov_chain() -> Any:
-    """GET chain from param model.
-
-    Returns:
-        JSON representation of markov chain.
-    """
-    test_model = {
-        "This is": ["some"],
-        "is some": ["is", "sample"],
-        "some is": ["some"],
-        "some sample": ["text"],
-    }
-    chain = markov.generate_chain(model=test_model, length=15, order=3)
-    return jsonify(chain)
+    return jsonify(chains)
