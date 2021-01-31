@@ -17,11 +17,11 @@ The test suite uses pytest. Linting is provided by flake8 and follows the (unfor
 ## Build Process
 
 Install Poetry for Python if you haven't already. See the [docs](https://python-poetry.org/docs/) for instructions.
-
-Use Poetry to install the project dependencies. Poetry will handle your virtualenv for you (hooray):
+  -=
+Use Poetry to install the project dependencies:
 <pre><code>> poetry install </code></pre>
 
-At any time, you can eithr run nox from the noxfile via
+At any time, you can either run nox from the noxfile via
 <pre><code>> nox </code></pre>
 
 or choose a particular nox session to run. For example to run the linter:
